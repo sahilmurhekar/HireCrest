@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="colorpanda">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="assets/logo_light.png" type="image/x-icon">
+    <title>HireCrestAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Righteous&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <!-- AOS Animation Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <link href="../themes.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        /* Custom Animation Classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .slide-up {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: slideUp 0.8s ease-out forwards;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .floating-animation {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+    </style>
+</head>
+<body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
+
+<!-------------------------------------------- Navbar ----------------------------------------------------->
+
+<div class="navbar bg-base-100 sticky top-0 z-50">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <!-- Force display on medium and small screens only -->
+      <div tabindex="0" role="button" class="btn btn-ghost md:block sm:block">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-4">
+        <li class="py-1"><a>Home</a></li>
+        <li class="py-1"><a>About</a></li>
+        <li class="py-1"><a>Team</a></li>
+      </ul>
+    </div>
+    <img class="cursor-pointer mx-4" width="40px" href="#" src="assets/logo_light.png" alt="logo">
+  </div>
+  <div class="navbar-end">
+    <a class="btn btn-hover btn-primary px-8 mx-2">Sign In</a>
+    <a class="btn btn-hover mx-2 px-8">Sign Up</a>
+  </div>
+</div>
+
+<!-------------------------------------------- Hero Section ----------------------------------------------------->
+<section class="">
+  <div class="container mx-auto flex px-5 pt-24 pb-24 flex-col items-center lg:items-start lg:flex-row lg:pt-0">
+      <div
+          class="lg:flex-grow lg:pr-24 flex flex-col mb-16 items-center text-center lg:items-start lg:text-left lg:pt-48" data-aos="fade-right" data-aos-duration="1000">
+          <div class="flex flex-row justify-center pb-8"><img class="" src="assets/head_icon.png" alt=""></div>
+          <h1 class="text-6xl mb-2 font-bold slide-up" style="animation-delay: 0.2s">HireCrest:</h1>
+          <h1 class="text-4xl sm:text-4xl mb-2 font-bold slide-up" style="animation-delay: 0.4s">Revolutionizing Talent Acquisition</h1>
+          <p class="mb-8 italic slide-up lg:text-left" style="animation-delay: 0.6s">Streamlining Recruitment Through Intelligent Multi-Agent AI Systems</p>
+          <p class="mb-8 font-light slide-up" style="animation-delay: 0.8s">A comprehensive solution that transforms manual CV screening into an automated, accurate, and efficient talent matching pipeline. Leveraging advanced AI to connect the right candidates with the right opportunities, faster than ever before.</p>
+          
+          <div class="flex justify-center slide-up lg:justify-start" style="animation-delay: 1s">
+              <a class="btn btn-primary btn-hover z-10">Get Started →</a>
+              <a class="mx-2 btn py-2 btn-hover z-10">Know More !</a>
+          </div>
+      </div>
+      <div class="lg:w-full w-5/6 floating-animation" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
+          <img class="object-cover object-center rounded" alt="hero" src="assets/hero.png">
+      </div>
+  </div>
+</section>
+
+  <!------------------------------------------------About Section-------------------------------------------->
+  <div>
+    <img class="absolute top-300 left-0 md:top-250 lg:top-200 lg:w-150 z-1" src="assets/Ellipse.png" alt="">
+    <img class="absolute top-550 left-0 md:top-450 lg:top-380 lg:w-150 z-1" src="assets/Ellipse.png" alt="">
+    <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="px-16 py-6 absolute stroke stroke-2 text-7xl font-bold md:px-36 md:py-0 md:text-9xl lg:px-0">ABOUT</h2>
+    <p class="text-center text-5xl lg:text-left font-bold relative z-1 py-8" data-aos="fade-up">ABOUT</p>
+
+    <p class="text-center lg:text-left pt-8 font-light" data-aos="fade-up" data-aos-delay="100">HireCrest is an advanced multi-agent AI system designed to revolutionize the recruitment workflow. Our solution eliminates manual bottlenecks by automating job description analysis, candidate matching, and interview scheduling—all while maintaining human-quality assessment standards. Built with a sophisticated agent architecture and persistent memory database, HireCrest helps hiring teams find ideal candidates faster and more accurately than ever before.</p>
+
+    <h1 class="text-center lg:text-left pt-8 font-medium text-2xl pb-4" data-aos="fade-up" data-aos-delay="150">The Challenge</h1>
+
+    <p class="text-center lg:text-left font-light" data-aos="fade-up" data-aos-delay="200">Traditional recruitment involves countless hours reviewing job descriptions and résumés, resulting in hiring inefficiencies and missed talent opportunities. HireCrest addresses these pain points through intelligent automation of the entire candidate evaluation pipeline.</p>
+
+    <h1 class="text-center lg:text-left pt-8 font-medium text-2xl pb-4" data-aos="fade-up" data-aos-delay="250">Our Solution</h1>
+
+    <p class="text-center lg:text-left font-light" data-aos="fade-up" data-aos-delay="300">Our multi-agent framework features specialized AI agents working in concert:</p>
+    <ul class="list-disc list-inside font-light">
+      <li class="pt-4" data-aos="fade-up" data-aos-delay="350">JD Analysis Agent: Extracts and prioritizes key requirements from job descriptions</li>
+      <li class="pt-2" data-aos="fade-up" data-aos-delay="400">Profile Evaluation Agent: Transforms unstructured CV data into comparable candidate profiles</li>
+      <li class="pt-2" data-aos="fade-up" data-aos-delay="450">Matching Intelligence: Employs sophisticated algorithms to score candidate-role compatibility</li>
+      <li class="pt-2" data-aos="fade-up" data-aos-delay="500">Communication Agent: Generates personalized interview invitations for qualified candidates</li>
+    </ul>
+
+    <h1 class="text-center lg:text-left pt-8 font-medium text-2xl pb-4" data-aos="fade-up" data-aos-delay="550">Key Benefits</h1>
+
+    <ul class="list-disc list-inside font-light">
+      <li class="pt-4" data-aos="fade-up" data-aos-delay="600">Reduce hiring time by up to 70%</li>
+      <li class="pt-2" data-aos="fade-up" data-aos-delay="650">Eliminate unconscious bias in candidate selection</li>
+      <li class="pt-2" data-aos="fade-up" data-aos-delay="700">Create a seamless experience for both recruiters and candidates</li>
+      <li class="pt-2" data-aos="fade-up" data-aos-delay="750">Scale recruiting capabilities without increasing team size</li>
+    </ul>
+  </div>
+  <!-------------------------------------------- Team ----------------------------------------------------->
+  <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="py-34 absolute stroke stroke-2 text-7xl font-bold md:px-8 md:py-28 md:text-9xl lg:px-0">OUR TEAM</h2>
+  <p class="text-center text-5xl lg:text-left pt-36 pb-20 font-bold relative z-1 py-8" data-aos="fade-up">OUR TEAM</p>
+
+  <div class="flex lg:flex-row flex-col">
+    <div class="flex flex-row py-4" data-aos="fade-up" data-aos-delay="100">
+      <img class="h-20" src="assets/logo_light.png" alt="pic">
+      <div class="pt-2 mx-16">
+        <h1 class="text-xl font-bold">Sahil Murhekar</h1>
+        <p class="font-light">Full stack, AI/ML Developer</p>
+      </div>
+    </div>
+    <div class="flex flex-row py-4" data-aos="fade-up" data-aos-delay="200">
+      <img class="h-20" src="assets/logo_light.png" alt="pic">
+      <div class="pt-2 mx-16">
+        <h1 class="text-xl font-bold">Sahil Murhekar</h1>
+        <p class="font-light">Full stack, AI/ML Developer</p>
+      </div>
+    </div>
+  </div>
+    <!--------------------------------------------------------------------------------------------------->
+    <p class="font-light text-sm pt-16" data-aos="fade-up" data-aos-delay="100">Copyright © 2025 HireCrest</p>
+  
+  <!-- Custom JavaScript -->
+  <script>
+    // Initialize AOS animations
+    document.addEventListener('DOMContentLoaded', function() {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+      });
+      
+      // Add hover animations to buttons
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-3px)';
+          this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = 'none';
+        });
+      });
+    });
+
+  </script>
+</body>
+</html>

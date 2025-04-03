@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="colorpanda">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireCrest|Login</title>
+    <link rel="shortcut icon" href="assets/logo_light.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Righteous&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="../themes.css" rel="stylesheet" type="text/css" />
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes floatBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        .animate-slideIn {
+            animation: slideIn 0.8s ease forwards;
+        }
+        
+        .input:focus {
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
+    <img class="absolute top-0 left-0" src="assets/Ellipse.png" alt="">
+    <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="pt-22 px-8 absolute stroke stroke-2 text-7xl font-bold md:text-9xl md:pt-16 md:px-24 animate-pulse">LOGIN</h2>
+    <h1 class="p-24 font-bold text-6xl text-center lg:text-left animate-fadeIn" style="animation-delay: 0.2s; opacity: 0;">LOGIN</h1> 
+    <form class="px-0 lg:px-24" action="" method="post">
+        <div class="justify-center items-center flex flex-col lg:items-start">
+        <input type="text" name="username" placeholder="Username" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.4s; opacity: 0;" required>
+        <input type="password" name="password" placeholder="Password" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.6s; opacity: 0;" required>
+        <a class="font-light underline animate-slideIn" style="animation-delay: 0.8s; opacity: 0;" href="#">Forgot Password</a>
+        <div class="pt-4 flex flex-row animate-slideIn" style="animation-delay: 1s; opacity: 0;">
+        <p class="font-light">Don't have an account?</p><a class="font-light underline ml-1" href="#">Register here</a>
+        </div>
+        <button class="btn btn-primary mt-8 px-8 animate-fadeIn" style="animation-delay: 1.2s; opacity: 0;" type="submit">Login</button>
+    </div>
+    </form>
+</body>
+</html>
