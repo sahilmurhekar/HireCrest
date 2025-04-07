@@ -4,262 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/static/assets/logo_light.png" type="image/x-icon">
-    <title>HireCrestAI</title>
+    <title>HireCrestAI - My Applications</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Righteous&display=swap" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <link href="/static/themes.css" rel="stylesheet" type="text/css" />
-    <style>
-        ::-webkit-datetime-edit { /* For Webkit browsers */
-  padding: 0.5em;
-}
-
-::-webkit-calendar-picker-indicator { /* Calendar icon */
-  background-color: white; 
-  padding: 0.2em;
-  cursor: pointer;
-  border-radius: 3px;
-}
-
-/* Some Firefox-specific styling */
-input[type="date"]::-moz-calendar-picker-indicator,
-input[type="time"]::-moz-calendar-picker-indicator {
-  background-color: white;
-}
-    </style>
+    <style>* {
+      caret-color: transparent; /* Hides the blinking text cursor */
+    }</style>
 </head>
-<body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
-<div class="navbar bg-base-100 sticky top-0 z-50" data-aos="fade-right" data-aos-duration="800">
-    <div class="navbar-start">
-      <div class="dropdown">
-        <!-- Force display on medium and small screens only -->
-        <div tabindex="0" role="button" class="btn btn-ghost md:block sm:block">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+<body style="font-family:Josefin Sans!important;" class="px-[10%] py-2">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="navbar bg-base-100 sticky top-0 z-50" data-aos="fade-down" data-aos-duration="800">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <!-- Force display on medium and small screens only -->
+                <div tabindex="0" role="button" class="btn btn-ghost md:block sm:block">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-4">
+                    <li class="py-1"><a href="{{url_for('index')}}">Home</a></li>
+                    <li class="py-1"><a href="{{url_for('index')}}">About</a></li>
+                    <li class="py-1"><a href="{{url_for('index')}}">Team</a></li>
+                    <li class="py-1"><a href="{{url_for('home')}}">Jobs</a></li>
+                    <li class="py-1"><a href="{{url_for('my_applications')}}">Applications</a></li>
+                </ul>
+            </div>
+            <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
         </div>
-        <ul
-          tabindex="0"
-          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-4">
-          <li class="py-1"><a>Home</a></li>
-          <li class="py-1"><a>About</a></li>
-          <li class="py-1"><a>Team</a></li>
-          <li class="py-1"><a>Jobs</a></li>
-          <li class="py-1"><a>Schedule</a></li>
-        </ul>
-      </div>
-      <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
-    </div>
-    <div class="navbar-end">
-      <a class="btn btn-hover btn-primary px-8 mx-2" href="{{ url_for('logout') }}">Logout</a>
-    </div>
-  </div>
-  
-<!----------------------------------------------- Searchbar ------------------------------------------------>
-<div class="flex flex-col mb-16 items-center justify-center md:items-start md:justify-start" data-aos="fade-left" data-aos-duration="800">
-<form class="pt-16 w-full flex flex-row justify-center lg:justify-start" action="">
-    <input type="text" placeholder="Search for jobs..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" />
-    <button type="submit" class="btn btn-primary mx-4">Search</button>
-</form>
-<form class="pt-4 flex flex-row justify-center lg:justify-start" action="">
-    <input type="text" placeholder="Compatibility %" class="rounded-box bg-base-200 border-base-300 px-4 w-full" />
-    <button type="submit" class="btn btn-primary mx-4">Filter</button>
-</form>
-</div>
-
-<!-------------------------------------------------Job List------------------------------------------------>
-<div data-aos="fade-up" data-aos-delay="200" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
-    <div class="flex flex-row gap-8">
-    <div>
-        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
-    </div>
-    <div class="pt-2">
-        <h1 class="text-xl font-bold">Company Name</h1>
-        <h2>Position</h2>
-    </div>
-</div>
-
-<div class="pt-4 flex flex-row justify-between gap-4 pr-2">
-
-    <button class="btn btn-success" onclick="my_modal_1.showModal()">Schedule</button>
-<dialog id="my_modal_1" class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Schedule your Interview</h3>
-    <form action="">
-        <div class="flex flex-col gap-4 my-8">
-        <input type="date" placeholder="Date" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        <input type="time" placeholder="Time" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
+        <div class="navbar-end">
+            <a class="btn btn-hover btn-primary px-8 mx-2" href="{{ url_for('logout') }}">Logout</a>
         </div>
-        <div class="flex flex-row justify-start gap-4">
-        <button class="btn btn-primary" type="submit">Schedule</button>
-        <button class="btn bg-base-100">Cancel</button>
     </div>
-    </form>
-  </div>
-</dialog>
-    <button class="btn btn-warning">Withdraw</button>
-</div>
-</div>
-
-
-
-
-
-<div data-aos="fade-up" data-aos-delay="300" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
-    <div class="flex flex-row gap-8">
-    <div>
-        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
+    <div class="flex flex-col items-center justify-center md:items-start md:justify-start lg:flex-row">
+        <form class="pt-16 w-full flex flex-row justify-center lg:justify-start" action="" data-aos="fade-right" data-aos-duration="1000">
+            <input type="text" placeholder="Search for jobs..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" />
+            <button type="submit" class="btn btn-primary mx-4">Search</button>
+        </form>
+        <a href="{{ url_for('my_applications') }}" class="btn btn-primary my-8 mb-16 lg:my-16 px-16" data-aos="fade-left" data-aos-duration="1000">Applied Jobs</a>
     </div>
-    <div class="pt-2">
-        <h1 class="text-xl font-bold">Company Name</h1>
-        <h2>Position</h2>
+    <div class="bg-base-100 sticky top-0 z-50" data-aos="fade-down">
+        <h1 class="text-2xl font-bold pt-4">My Job Applications</h1>
     </div>
-</div>
-
-<div class="pt-4 flex flex-row justify-between gap-4 pr-2">
-
-    <button class="btn btn-success" onclick="my_modal_2.showModal()">Schedule</button>
-<dialog id="my_modal_2" class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Schedule your Interview</h3>
-    <form action="">
-        <div class="flex flex-col gap-4 my-8">
-        <input type="date" placeholder="Date" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        <input type="time" placeholder="Time" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        </div>
-        <div class="flex flex-row justify-start gap-4">
-        <button class="btn btn-primary" type="submit">Schedule</button>
-        <button class="btn bg-base-100">Cancel</button>
+    <div data-aos="fade-up" data-aos-delay="400">
+        {% if applications %}
+            {% for application in applications %}
+            <div class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
+                <div class="flex flex-row gap-8">
+                    <div>
+                        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt=" ">
+                    </div>
+                    <div class="pt-2">
+                        <h1 class="text-xl font-bold">{{ application.job_title }}</h1>
+                        <h2>{{ application.company }}</h2>
+                        <p>Applied on: {{ application.applied_date.strftime('%Y-%m-%d') }}</p>
+                    </div>
+                </div>
+                <div class="pt-4 flex flex-row justify-between gap-4 pr-2">
+                    <!-- Removed compatibility display -->
+                    <form action="{{ url_for('withdraw_application', job_id=application.job_id) }}" method="POST">
+                        <button type="submit" class="btn btn-warning">Withdraw</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No applications found.</p>
+        {% endif %}
     </div>
-    </form>
-  </div>
-</dialog>
-    <button class="btn btn-warning">Withdraw</button>
-</div>
-</div>
-
-
-
-
-<div data-aos="fade-up" data-aos-delay="400" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
-    <div class="flex flex-row gap-8">
-    <div>
-        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
-    </div>
-    <div class="pt-2">
-        <h1 class="text-xl font-bold">Company Name</h1>
-        <h2>Position</h2>
-    </div>
-</div>
-
-<div class="pt-4 flex flex-row justify-between gap-4 pr-2">
-
-    <button class="btn btn-success" onclick="my_modal_3.showModal()">Schedule</button>
-<dialog id="my_modal_3" class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Schedule your Interview</h3>
-    <form action="">
-        <div class="flex flex-col gap-4 my-8">
-        <input type="date" placeholder="Date" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        <input type="time" placeholder="Time" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        </div>
-        <div class="flex flex-row justify-start gap-4">
-        <button class="btn btn-primary" type="submit">Schedule</button>
-        <button class="btn bg-base-100">Cancel</button>
-    </div>
-    </form>
-  </div>
-</dialog>
-    <button class="btn btn-warning">Withdraw</button>
-</div>
-</div>
-
-
-
-
-<div data-aos="fade-up" data-aos-delay="500" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
-    <div class="flex flex-row gap-8">
-    <div>
-        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
-    </div>
-    <div class="pt-2">
-        <h1 class="text-xl font-bold">Company Name</h1>
-        <h2>Position</h2>
-    </div>
-</div>
-
-<div class="pt-4 flex flex-row justify-between gap-4 pr-2">
-
-    <button class="btn btn-success" onclick="my_modal_4.showModal()">Schedule</button>
-<dialog id="my_modal_4" class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Schedule your Interview</h3>
-    <form action="">
-        <div class="flex flex-col gap-4 my-8">
-        <input type="date" placeholder="Date" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        <input type="time" placeholder="Time" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        </div>
-        <div class="flex flex-row justify-start gap-4">
-        <button class="btn btn-primary" type="submit">Schedule</button>
-        <button class="btn bg-base-100">Cancel</button>
-    </div>
-    </form>
-  </div>
-</dialog>
-    <button class="btn btn-warning">Withdraw</button>
-</div>
-</div>
-
-
-
-
-<div data-aos="fade-up" data-aos-delay="600" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
-    <div class="flex flex-row gap-8">
-    <div>
-        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
-    </div>
-    <div class="pt-2">
-        <h1 class="text-xl font-bold">Company Name</h1>
-        <h2>Position</h2>
-    </div>
-</div>
-
-<div class="pt-4 flex flex-row justify-between gap-4 pr-2">
-
-    <button class="btn btn-success" onclick="my_modal_5.showModal()">Schedule</button>
-<dialog id="my_modal_5" class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Schedule your Interview</h3>
-    <form action="">
-        <div class="flex flex-col gap-4 my-8">
-        <input type="date" placeholder="Date" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        <input type="time" placeholder="Time" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-        </div>
-        <div class="flex flex-row justify-start gap-4">
-        <button class="btn btn-primary" type="submit">Schedule</button>
-        <button class="btn bg-base-100">Cancel</button>
-    </div>
-    </form>
-  </div>
-</dialog>
-    <button class="btn btn-warning">Withdraw</button>
-</div>
-</div>
-
-
-<div data-aos="fade-in" data-aos-delay="200" class=" flex flex-row justify-center mt-8">
-    <a class="btn btn-primary">Show More</a>
-</div>
-
-<p class="font-light text-sm pt-16">Copyright © 2025 HireCrest</p>
-
-
-<script>
-  AOS.init();
-</script>
+    <p class="font-light text-sm pt-16" data-aos="fade-up" data-aos-duration="800">Copyright © 2025 HireCrest</p>
+    <script>
+        AOS.init();
+    </script>
 </body>
 </html>

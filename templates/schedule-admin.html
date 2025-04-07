@@ -16,6 +16,9 @@
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <link href="/static/themes.css" rel="stylesheet" type="text/css" />
     <style>
+        * {
+  caret-color: transparent; /* Hides the blinking text cursor */
+}
         ::-webkit-datetime-edit { /* For Webkit browsers */
   padding: 0.5em;
 }
@@ -45,11 +48,11 @@ input[type="time"]::-moz-calendar-picker-indicator {
         <ul
           tabindex="0"
           class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-4">
-          <li class="py-1"><a>Home</a></li>
-          <li class="py-1"><a>About</a></li>
-          <li class="py-1"><a>Team</a></li>
-          <li class="py-1"><a>Jobs</a></li>
-          <li class="py-1"><a>Schedule</a></li>
+          <li class="py-1"><a href="{{url_for('index')}}">Home</a></li>
+          <li class="py-1"><a href="{{url_for('index')}}">About</a></li>
+          <li class="py-1"><a href="{{url_for('index')}}">Team</a></li>
+          <li class="py-1"><a href="{{url_for('home')}}">Jobs</a></li>
+          <li class="py-1"><a href="#">Schedule</a></li>
         </ul>
       </div>
       <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">

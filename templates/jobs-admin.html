@@ -15,8 +15,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <link href="/static/themes.css" rel="stylesheet" type="text/css" />
+    <style>
+      * {
+  caret-color: transparent; /* Hides the blinking text cursor */
+}
+    </style>
 </head>
 <body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 <div class="navbar bg-base-100 sticky top-0 z-50" data-aos="fade-down" data-aos-duration="800">
     <div class="navbar-start">
       <div class="dropdown">
@@ -27,11 +39,11 @@
         <ul
           tabindex="0"
           class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-4">
-          <li class="py-1"><a>Home</a></li>
-          <li class="py-1"><a>About</a></li>
-          <li class="py-1"><a>Team</a></li>
-          <li class="py-1"><a>Jobs</a></li>
-          <li class="py-1"><a>Schedule</a></li>
+          <li class="py-1"><a href="{{url_for('index')}}">Home</a></li>
+          <li class="py-1"><a href="{{url_for('index')}}">About</a></li>
+          <li class="py-1"><a href="{{url_for('index')}}">Team</a></li>
+          <li class="py-1"><a href="{{url_for('home')}}">Jobs</a></li>
+          <li class="py-1"><a href="#">Schedule</a></li>
         </ul>
       </div>
       <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
@@ -51,88 +63,52 @@
 <dialog id="my_modal_5" class="modal modal-medium">
   <div class="modal-box" data-aos="zoom-in" data-aos-duration="500">
     <h3 class="text-lg font-bold my-6">Enter job details</h3>
-    <form action="">
-      <input type="text" placeholder="Job Title" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-      <input type="text" placeholder="Company Name" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
+    <form action="{{ url_for('post_job') }}" method="POST">
+      <input type="text" name="job_title" placeholder="Job Title" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" required />
+      <input type="text" name="company" placeholder="Company Name" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" required />
       <div class="flex flex-row gap-4">
-      <input type="number" placeholder="Salary (in INR)" class="input w-full my-2" />
-      <input type="number" placeholder="Experience (years)" class="input w-full my-2" />
+          <input type="number" name="salary" placeholder="Salary (in INR)" class="input w-full my-2" required />
+          <input type="number" name="experience" placeholder="Experience (years)" class="input w-full my-2" required />
       </div>
       <div class="flex flex-row gap-4">
-      <input type="text" placeholder="Job Type" class="input w-full my-2" />
-      <input type="text" placeholder="Location" class="input w-full my-2" />
+          <input type="text" name="job_type" placeholder="Job Type" class="input w-full my-2" required />
+          <input type="text" name="location" placeholder="Location" class="input w-full my-2" required />
       </div>
-      <input type="text" placeholder="Skills (comma seperated)" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" />
-      <textarea class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" placeholder="Job Description"></textarea>
+      <input type="text" name="skills" placeholder="Skills (comma separated)" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" required />
+      <textarea name="description" placeholder="Job Description" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" required></textarea>
       <div class="flex flex-row justify-start my-4">
-        <button class="btn btn-primary mr-4">Post Job</button>
-        <button class="btn btn-warning mr-4" onclick="my_modal_5.close()">Cancel</button>
+          <button type="submit" class="btn btn-primary mr-4">Post Job</button>
+          <button type="button" class="btn btn-warning mr-4" onclick="my_modal_5.close()">Cancel</button>
       </div>
-    </form>
+  </form>
     </div>
 </dialog>
 </div>
 
 <!----------------------------------------------- Job Listings ----------------------------------------------->
 
-    <div class="flex flex-row flex-wrap gap-12 justify-center">
-      <!-- Card 1 -->
-      <div class="card bg-base-200 w-84 shadow-sm mb-12" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
-        <div class="card-body">
-          <h1 class="text-2xl font-bold" >Full Stack Developer</h1>
-          <h2 class="text-lg">Company Name</h2>
-          <p>2 days ago</p>
+<div class="flex flex-row flex-wrap gap-12 justify-center">
+  {% for job in jobs %}
+  <div class="card bg-base-200 w-84 shadow-sm mb-12" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+      <div class="card-body">
+          <h1 class="text-2xl font-bold">{{ job.job_title }}</h1>
+          <h2 class="text-lg">{{ job.company }}</h2>
+          <p>{{ job.posted_date.strftime('%Y-%m-%d') }}</p>
           <ul class="font-light">
-            <li>Salary: $35k</li>
-            <li>Experience: 2-5 yrs</li>
-            <li>Type: Full-time</li>
-            <li>Location: Work from Home</li>
+              <li>Salary: {{ job.salary }}</li>
+              <li>Experience: {{ job.experience }} yrs</li>
+              <li>Type: {{ job.job_type }}</li>
+              <li>Location: {{ job.location }}</li>
           </ul>
           <div class="card-actions justify-start mt-4">
-            <button class="btn btn-primary">View Details</button>
-            <button class="btn btn-warning">Delete job</button>
+              <a href="{{ url_for('list_applicants', job_id=job._id) }}" class="btn btn-primary">View Applicants</a>
+              <a href="{{ url_for('delete_job', job_id=job._id) }}" class="btn btn-warning">Delete Job</a>
           </div>
-        </div>
-      </div>
-
-    <!-- Card 2 -->
-      <div class="card bg-base-200 w-84 shadow-sm mb-12" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
-        <div class="card-body">
-          <h1 class="text-2xl font-bold" >Full Stack Developer</h1>
-          <h2 class="text-lg">Company Name</h2>
-          <p>2 days ago</p>
-          <ul class="font-light">
-            <li>Salary: $35k</li>
-            <li>Experience: 2-5 yrs</li>
-            <li>Type: Full-time</li>
-            <li>Location: Work from Home</li>
-          </ul>
-          <div class="card-actions justify-start mt-4">
-            <button class="btn btn-primary">View Details</button>
-            <button class="btn btn-warning">Delete job</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="card bg-base-200 w-84 shadow-sm mb-12" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
-        <div class="card-body">
-          <h1 class="text-2xl font-bold" >Full Stack Developer</h1>
-          <h2 class="text-lg">Company Name</h2>
-          <p>2 days ago</p>
-          <ul class="font-light">
-            <li>Salary: $35k</li>
-            <li>Experience: 2-5 yrs</li>
-            <li>Type: Full-time</li>
-            <li>Location: Work from Home</li>
-          </ul>
-          <div class="card-actions justify-start mt-4">
-            <button class="btn btn-primary">View Details</button>
-            <button class="btn btn-warning">Delete job</button>
-          </div>
-        </div>
       </div>
   </div>
+  {% endfor %}
+</div>
+
   <p class="font-light text-sm pt-16" data-aos="fade-up" data-aos-duration="800">Copyright © 2025 HireCrest</p>
 
   <!-- Initialize AOS -->

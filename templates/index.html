@@ -17,6 +17,9 @@
     <link href="/static/themes.css" rel="stylesheet" type="text/css" />
 
     <style>
+      * {
+  caret-color: transparent; /* Hides the blinking text cursor */
+}
         /* Custom Animation Classes */
         .fade-in {
             opacity: 0;
@@ -160,9 +163,9 @@
       <ul
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-4">
-        <li class="py-1"><a>Home</a></li>
-        <li class="py-1"><a>About</a></li>
-        <li class="py-1"><a>Team</a></li>
+        <li class="py-1"><a href="{{url_for('index')}}">Home</a></li>
+        <li class="py-1"><a href="#about-section">About</a></li>
+        <li class="py-1"><a href="#team-section">Team</a></li>
       </ul>
     </div>
     <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
@@ -200,7 +203,7 @@
           
           <div class="flex justify-center slide-up lg:justify-start" style="animation-delay: 1s">
               <a href="{{ url_for('login') }}" class="btn btn-primary btn-hover z-10">Get Started →</a>
-              <a class="mx-2 btn py-2 btn-hover z-10">Know More !</a>
+              <a href="#about-section" class="mx-2 btn py-2 btn-hover z-10">Know More !</a>
           </div>
       </div>
       <div class="lg:w-full w-5/6 floating-animation" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
@@ -210,7 +213,7 @@
 </section>
 
   <!------------------------------------------------About Section-------------------------------------------->
-  <div>
+  <div id="about-section">
     <img class="absolute top-300 left-0 md:top-250 lg:top-200 lg:w-150 z-1" src="/static/assets/Ellipse.png" alt="">
     <img class="absolute top-550 left-0 md:top-450 lg:top-380 lg:w-150 z-1" src="/static/assets/Ellipse.png" alt="">
     <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="px-16 py-6 absolute stroke stroke-2 text-7xl font-bold md:px-36 md:py-0 md:text-9xl lg:px-0">ABOUT</h2>
@@ -242,7 +245,7 @@
     </ul>
   </div>
   <!-------------------------------------------- Team ----------------------------------------------------->
-  <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="py-34 absolute stroke stroke-2 text-7xl font-bold md:px-8 md:py-28 md:text-9xl lg:px-0">OUR TEAM</h2>
+  <h2 id="team-section" style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="py-34 absolute stroke stroke-2 text-7xl font-bold md:px-8 md:py-28 md:text-9xl lg:px-0">OUR TEAM</h2>
   <p class="text-center text-5xl lg:text-left pt-36 pb-20 font-bold relative z-1 py-8" data-aos="fade-up">OUR TEAM</p>
 
   <div class="flex lg:flex-row flex-col">
@@ -307,7 +310,18 @@
           }, 300);
         });
       }, 5000);
+
+      window.scrollToAbout = function() {
+            document.getElementById('about-section').scrollIntoView({ behavior: 'smooth' });
+        };
+
+      window.scrollToAbout = function() {
+            document.getElementById('team-section').scrollIntoView({ behavior: 'smooth' });
+        };  
+
     });
+
+
   </script>
 </body>
 </html>
