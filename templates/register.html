@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HireCrest|Register</title>
-    <link rel="shortcut icon" href="assets/logo_light.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/assets/logo_light.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Righteous&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="../themes.css" rel="stylesheet" type="text/css" />
+    <link href="/static/themes.css" rel="stylesheet" type="text/css" />
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -72,16 +72,27 @@
     </style>
 </head>
 <body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
-    <img class="absolute top-0 left-0" src="assets/Ellipse.png" alt="">
+    <img class="absolute top-0 left-0" src="/static/assets/Ellipse.png" alt="">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
     <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="pt-22 px-8 absolute stroke stroke-2 text-7xl font-bold md:text-9xl md:pt-16 md:px-24 animate-pulse">REGISTER</h2>
     <h1 class="px-8 py-24 font-bold text-6xl text-center lg:text-left lg:p-24 animate-fadeIn" style="animation-delay: 0.2s; opacity: 0;">REGISTER</h1> 
-    <form class="px-0 lg:px-24" action="" method="post">
+    <form class="px-0 lg:px-24" action="{{ url_for('register') }}" method="POST">
         <div class="justify-center items-center flex flex-col lg:items-start">
-        <input type="text" name="name" placeholder="Name" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.3s; opacity: 0;" required>
-        <input type="text" name="username" placeholder="Username" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.4s; opacity: 0;" required>
-        <input type="email" name="email" placeholder="Email" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.5s; opacity: 0;" required>
-        <input type="password" name="password" placeholder="Password" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.6s; opacity: 0;" required>
-        <input type="password" name="confirm_password" placeholder="Confirm Password" class="input w-full mb-8 animate-slideIn" style="animation-delay: 0.7s; opacity: 0;" required>
+        <input type="text" name="name" placeholder="Name" class="input border-2 w-full md:w-150 mb-8 animate-slideIn bg-transparent" style="animation-delay: 0.3s; opacity: 0;" required>
+        <input type="text" name="username" placeholder="Username" class="input border-2 w-full md:w-150 mb-8 animate-slideIn bg-transparent" style="animation-delay: 0.4s; opacity: 0;" required>
+        <input type="email" name="email" placeholder="Email" class="input border-2 w-full mb-8 md:w-150 animate-slideIn bg-transparent" style="animation-delay: 0.5s; opacity: 0;" required>
+        <input type="password" name="password" placeholder="Password" class="input border-2 w-full mb-8 md:w-150 animate-slideIn bg-transparent" style="animation-delay: 0.6s; opacity: 0;" required>
+        <input type="password" name="confirm_password" placeholder="Confirm Password" class="input border-2 w-full mb-8 md:w-150 animate-slideIn bg-transparent" style="animation-delay: 0.7s; opacity: 0;" required>
         
         <div class="radio-group animate-slideIn" style="animation-delay: 0.8s; opacity: 0;">
             <label for="gender" class="font-semibold">Gender:</label>

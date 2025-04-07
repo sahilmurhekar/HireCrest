@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="assets/logo_light.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/assets/logo_light.png" type="image/x-icon">
     <title>HireCrestAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <link href="../themes.css" rel="stylesheet" type="text/css" />
+    <link href="/static/themes.css" rel="stylesheet" type="text/css" />
 
     <style>
         /* Custom Animation Classes */
@@ -79,21 +79,71 @@
             }
         }
         .floating-animation {
-    animation: floating 3s ease-in-out infinite;
-}
+            animation: floating 3s ease-in-out infinite;
+        }
 
-@keyframes floating {
-    0% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
-}
-
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        /* Flash message styling */
+        .alert-container {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 80%;
+            max-width: 600px;
+        }
+        
+        .alert {
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.5s ease forwards;
+        }
+        
+        .alert-success {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .alert-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .alert-info {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .alert-warning {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-close {
+            background: transparent;
+            border: none;
+            color: currentColor;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 15px;
+        }
     </style>
 </head>
 <body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
@@ -115,40 +165,54 @@
         <li class="py-1"><a>Team</a></li>
       </ul>
     </div>
-    <img class="cursor-pointer mx-4" width="40px" href="#" src="assets/logo_light.png" alt="logo">
+    <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
   </div>
   <div class="navbar-end">
-    <a class="btn btn-hover btn-primary px-8 mx-2">Sign In</a>
-    <a class="btn btn-hover mx-2 px-8">Sign Up</a>
+    <a href="{{ url_for('login') }}" class="btn btn-hover btn-primary px-8 mx-2">Sign In</a>
+    <a href="{{ url_for('register') }}" class="btn btn-hover mx-2 px-8">Sign Up</a>
   </div>
+</div>
+
+<!-- Flash Messages Container - Moved outside of hero section -->
+<div class="alert-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </div>
 
 <!-------------------------------------------- Hero Section ----------------------------------------------------->
 <section class="">
   <div class="container mx-auto flex px-5 pt-24 pb-24 flex-col items-center lg:items-start lg:flex-row lg:pt-0">
-      <div
+    <div
           class="lg:flex-grow lg:pr-24 flex flex-col mb-16 items-center text-center lg:items-start lg:text-left lg:pt-48" data-aos="fade-right" data-aos-duration="1000">
-          <div class="flex flex-row justify-center pb-8"><img class="" src="assets/head_icon.png" alt=""></div>
+          <div class="flex flex-row justify-center pb-8 floating-animation"><img class="" src="/static/assets/head_icon.png" alt=""></div>
           <h1 class="text-6xl mb-2 font-bold slide-up" style="animation-delay: 0.2s">HireCrest:</h1>
           <h1 class="text-4xl sm:text-4xl mb-2 font-bold slide-up" style="animation-delay: 0.4s">Revolutionizing Talent Acquisition</h1>
           <p class="mb-8 italic slide-up lg:text-left" style="animation-delay: 0.6s">Streamlining Recruitment Through Intelligent Multi-Agent AI Systems</p>
           <p class="mb-8 font-light slide-up" style="animation-delay: 0.8s">A comprehensive solution that transforms manual CV screening into an automated, accurate, and efficient talent matching pipeline. Leveraging advanced AI to connect the right candidates with the right opportunities, faster than ever before.</p>
           
           <div class="flex justify-center slide-up lg:justify-start" style="animation-delay: 1s">
-              <a class="btn btn-primary btn-hover z-10">Get Started →</a>
+              <a href="{{ url_for('login') }}" class="btn btn-primary btn-hover z-10">Get Started →</a>
               <a class="mx-2 btn py-2 btn-hover z-10">Know More !</a>
           </div>
       </div>
       <div class="lg:w-full w-5/6 floating-animation" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
-          <img class="object-cover object-center rounded" alt="hero" src="assets/hero.png">
+          <img class="object-cover object-center rounded" alt="hero" src="/static/assets/hero.png">
       </div>
   </div>
 </section>
 
   <!------------------------------------------------About Section-------------------------------------------->
   <div>
-    <img class="absolute top-300 left-0 md:top-250 lg:top-200 lg:w-150 z-1" src="assets/Ellipse.png" alt="">
-    <img class="absolute top-550 left-0 md:top-450 lg:top-380 lg:w-150 z-1" src="assets/Ellipse.png" alt="">
+    <img class="absolute top-300 left-0 md:top-250 lg:top-200 lg:w-150 z-1" src="/static/assets/Ellipse.png" alt="">
+    <img class="absolute top-550 left-0 md:top-450 lg:top-380 lg:w-150 z-1" src="/static/assets/Ellipse.png" alt="">
     <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="px-16 py-6 absolute stroke stroke-2 text-7xl font-bold md:px-36 md:py-0 md:text-9xl lg:px-0">ABOUT</h2>
     <p class="text-center text-5xl lg:text-left font-bold relative z-1 py-8" data-aos="fade-up">ABOUT</p>
 
@@ -183,14 +247,14 @@
 
   <div class="flex lg:flex-row flex-col">
     <div class="flex flex-row py-4" data-aos="fade-up" data-aos-delay="100">
-      <img class="h-20" src="assets/logo_light.png" alt="pic">
+      <img class="h-20" src="/static/assets/logo_light.png" alt="pic">
       <div class="pt-2 mx-16">
         <h1 class="text-xl font-bold">Sahil Murhekar</h1>
         <p class="font-light">Full stack, AI/ML Developer</p>
       </div>
     </div>
     <div class="flex flex-row py-4" data-aos="fade-up" data-aos-delay="200">
-      <img class="h-20" src="assets/logo_light.png" alt="pic">
+      <img class="h-20" src="/static/assets/logo_light.png" alt="pic">
       <div class="pt-2 mx-16">
         <h1 class="text-xl font-bold">Sahil Murhekar</h1>
         <p class="font-light">Full stack, AI/ML Developer</p>
@@ -223,8 +287,27 @@
           this.style.boxShadow = 'none';
         });
       });
+      
+      // Add JavaScript for alert close buttons
+      document.querySelectorAll('.btn-close').forEach(button => {
+        button.addEventListener('click', function() {
+          this.parentElement.style.opacity = '0';
+          setTimeout(() => {
+            this.parentElement.style.display = 'none';
+          }, 300);
+        });
+      });
+      
+      // Auto-hide alerts after 5 seconds
+      setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+          alert.style.opacity = '0';
+          setTimeout(() => {
+            alert.style.display = 'none';
+          }, 300);
+        });
+      }, 5000);
     });
-
   </script>
 </body>
 </html>

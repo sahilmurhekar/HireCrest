@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="assets/logo_light.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/assets/logo_light.png" type="image/x-icon">
     <title>HireCrestAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <link href="../themes.css" rel="stylesheet" type="text/css" />
+    <link href="/static/themes.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="font-family:Josefin Sans !important;" class="px-[10%] py-2">
 <div class="navbar bg-base-100 sticky top-0 z-50" data-aos="fade-down" data-aos-duration="800">
@@ -34,10 +34,10 @@
           <li class="py-1"><a>Schedule</a></li>
         </ul>
       </div>
-      <img class="cursor-pointer mx-4" width="40px" href="#" src="assets/logo_light.png" alt="logo">
+      <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
     </div>
     <div class="navbar-end">
-      <a class="btn btn-hover btn-primary px-8 mx-2">Logout</a>
+      <a class="btn btn-hover btn-primary px-8 mx-2" href="{{ url_for('logout') }}">Logout</a>
     </div>
   </div>
   

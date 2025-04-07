@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="assets/logo_light.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/assets/logo_light.png" type="image/x-icon">
     <title>HireCrestAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
     <!-- AOS Animation Library -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <link href="../themes.css" rel="stylesheet" type="text/css" />
+    <link href="/static/themes.css" rel="stylesheet" type="text/css" />
     <style>
         ::-webkit-datetime-edit { /* For Webkit browsers */
   padding: 0.5em;
@@ -52,10 +52,10 @@ input[type="time"]::-moz-calendar-picker-indicator {
           <li class="py-1"><a>Schedule</a></li>
         </ul>
       </div>
-      <img class="cursor-pointer mx-4" width="40px" href="#" src="assets/logo_light.png" alt="logo">
+      <img class="cursor-pointer mx-4" width="40px" href="#" src="/static/assets/logo_light.png" alt="logo">
     </div>
     <div class="navbar-end">
-      <a class="btn btn-hover btn-primary px-8 mx-2">Logout</a>
+      <a class="btn btn-hover btn-primary px-8 mx-2" href="{{ url_for('logout') }}">Logout</a>
     </div>
   </div>
   
@@ -75,7 +75,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 <div data-aos="fade-up" data-aos-delay="200" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
     <div class="flex flex-row gap-8">
     <div>
-        <img class="w-15 rounded-[50%]" src="assets/Rectangle.png" alt="">
+        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
     </div>
     <div class="pt-2">
         <h1 class="text-xl font-bold">Company Name</h1>
@@ -112,7 +112,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 <div data-aos="fade-up" data-aos-delay="300" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
     <div class="flex flex-row gap-8">
     <div>
-        <img class="w-15 rounded-[50%]" src="assets/Rectangle.png" alt="">
+        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
     </div>
     <div class="pt-2">
         <h1 class="text-xl font-bold">Company Name</h1>
@@ -148,7 +148,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 <div data-aos="fade-up" data-aos-delay="400" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
     <div class="flex flex-row gap-8">
     <div>
-        <img class="w-15 rounded-[50%]" src="assets/Rectangle.png" alt="">
+        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
     </div>
     <div class="pt-2">
         <h1 class="text-xl font-bold">Company Name</h1>
@@ -184,7 +184,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 <div data-aos="fade-up" data-aos-delay="500" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
     <div class="flex flex-row gap-8">
     <div>
-        <img class="w-15 rounded-[50%]" src="assets/Rectangle.png" alt="">
+        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
     </div>
     <div class="pt-2">
         <h1 class="text-xl font-bold">Company Name</h1>
@@ -220,7 +220,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 <div data-aos="fade-up" data-aos-delay="600" class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
     <div class="flex flex-row gap-8">
     <div>
-        <img class="w-15 rounded-[50%]" src="assets/Rectangle.png" alt="">
+        <img class="w-15 rounded-[50%]" src="/static/assets/Rectangle.png" alt="">
     </div>
     <div class="pt-2">
         <h1 class="text-xl font-bold">Company Name</h1>
