@@ -78,6 +78,7 @@
       </form>
         </div>
     </dialog>
+    <button class="btn btn-primary mx-4 my-8 mb-16 lg:my-16 px-16" onclick="window.location='{{ url_for('scheduled_interviews') }}'" data-aos="fade-left" data-aos-duration="1000">View Scheduled Interviews</button>
     </div>
 
 
@@ -87,7 +88,7 @@
     <div>
         {% if applicants %}
             {% for applicant in applicants %}
-                <div class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out" onclick="window.location='{{ url_for('download_resume', filename=applicant.resume) }}'">
+                <div class="flex flex-col lg:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
                     <div class="flex flex-row gap-8">
                         <div class="pt-2">
                             <h1 class="text-xl font-bold">{{ applicant.name }}</h1>
@@ -97,7 +98,21 @@
                     </div>
                     <div class="pt-4 flex flex-row justify-between gap-4 pr-2">
                         <div class="flex flex-row gap-4">
-                            <button class="btn btn-success">Confirm</button>
+                            <button class="btn btn-primary" onclick="window.location='{{ url_for('download_resume', filename=applicant.resume) }}'">View</button>
+                            <button class="btn btn-success" onclick="my_model_1_{{ applicant.user_id }}.showModal()">Confirm</button>
+                            <dialog id="my_model_1_{{ applicant.user_id }}" class="modal">
+                                <div class="modal-box">
+                                    <h3 class="text-lg font-bold">Schedule Interview for {{ applicant.name }}</h3>
+                                    <form action="{{ url_for('schedule_interview', job_id=job._id, user_id=applicant.user_id) }}" method="POST">
+                                        <input type="date" name="date" placeholder="Date" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" required />
+                                        <input type="time" name="time" placeholder="Time" class="py-2 px-4 border-base-300 rounded w-full my-2 text-sm" required />
+                                        <div class="flex flex-row justify-start my-4">
+                                            <button type="submit" class="btn btn-primary mr-4">Schedule</button>
+                                            <button type="button" class="btn btn-warning mr-4" onclick="my_model_1_{{ applicant.user_id }}.close()">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </dialog>
                             <form action="{{ url_for('reject_applicant', job_id=job._id, user_id=applicant.user_id) }}" method="POST" style="display: inline;">
                                 <button type="submit" class="btn btn-warning">Reject</button>
                             </form>

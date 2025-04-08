@@ -24,6 +24,7 @@ client = MongoClient(MONGO_URI)
 db = client['Hirecrest']
 users_collection = db['Users']
 jobs_collection = db['Jobs']
+interviews_collection = db['Interviews']  # New collection for interviews
 
 # Create unique indexes
 users_collection.create_index('username', unique=True)
@@ -412,6 +413,106 @@ def withdraw_application(job_id):
         flash(f'Error withdrawing application: {str(e)}', 'danger')
     
     return redirect(url_for('my_applications'))
+
+@app.route('/schedule-interview/<job_id>/<user_id>', methods=['POST'])
+@login_required
+def schedule_interview(job_id, user_id):
+    if session.get('role') != 'recruiter':
+        flash('Only recruiters can schedule interviews', 'danger')
+        return redirect(url_for('home'))
+
+    job = jobs_collection.find_one({
+        '_id': ObjectId(job_id),
+        'recruiter_id': session.get('user_id')
+    })
+    if not job:
+        flash('Job not found or you do not have permission to modify it', 'danger')
+        return redirect(url_for('list_applicants', job_id=job_id))
+
+    user = users_collection.find_one({'_id': ObjectId(user_id)})
+    if not user:
+        flash('User not found', 'danger')
+        return redirect(url_for('list_applicants', job_id=job_id))
+
+    try:
+        scheduled_date = request.form.get('date')
+        scheduled_time = request.form.get('time')
+
+        interview_data = {
+            'user_id': user_id,
+            'user_name': user['name'],
+            'email': user['email'],
+            'job_id': job_id,
+            'job_name': job['job_title'],
+            'scheduled_date': scheduled_date,
+            'scheduled_time': scheduled_time,
+            'recruiter_id': session.get('user_id'),
+            'created_at': datetime.now()
+        }
+
+        interviews_collection.insert_one(interview_data)
+        flash('Interview scheduled successfully!', 'success')
+    except Exception as e:
+        flash(f'Error scheduling interview: {str(e)}', 'danger')
+
+    return redirect(url_for('list_applicants', job_id=job_id))
+
+
+@app.route('/scheduled-interviews', methods=['GET'])
+@login_required
+def scheduled_interviews():
+    if session.get('role') != 'recruiter':
+        flash('Only recruiters can view scheduled interviews', 'danger')
+        return redirect(url_for('home'))
+
+    recruiter_id = session.get('user_id')
+    search_query = request.args.get('search', '').strip().lower()
+
+    query = {'recruiter_id': recruiter_id}
+    if search_query:
+        query['$or'] = [
+            {'user_name': {'$regex': search_query, '$options': 'i'}},
+            {'job_name': {'$regex': search_query, '$options': 'i'}},
+            {'email': {'$regex': search_query, '$options': 'i'}}
+        ]
+
+    interviews = list(interviews_collection.find(query))
+    return render_template('schedule-admin.html', interviews=interviews)
+
+@app.route('/reject-interview/<interview_id>', methods=['POST'])
+@login_required
+def reject_interview(interview_id):
+    if session.get('role') != 'recruiter':
+        flash('Only recruiters can reject interviews', 'danger')
+        return redirect(url_for('home'))
+    
+    interview = interviews_collection.find_one({
+        '_id': ObjectId(interview_id),
+        'recruiter_id': session.get('user_id')
+    })
+    
+    if not interview:
+        flash('Interview not found or you do not have permission to modify it', 'danger')
+        return redirect(url_for('scheduled_interviews'))
+    
+    try:
+        # Remove the interview
+        interviews_collection.delete_one({'_id': ObjectId(interview_id)})
+        
+        # Also remove the applicant from the job's applied list if needed
+        job_id = interview['job_id']
+        user_id = interview['user_id']
+        
+        jobs_collection.update_one(
+            {'_id': ObjectId(job_id)},
+            {'$pull': {'applied': {'user_id': user_id}}}
+        )
+        
+        flash('Interview rejected successfully!', 'success')
+    except Exception as e:
+        flash(f'Error rejecting interview: {str(e)}', 'danger')
+    
+    return redirect(url_for('scheduled_interviews'))
 
 @app.route('/logout')
 def logout():
