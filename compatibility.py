@@ -4,9 +4,13 @@ import requests
 import re
 import json
 import os
+from dotenv import load_dotenv  # Import python-dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Google Gemini setup
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyAfBnFjJ-80s7iy71wLVGNh2q3NccSjVo0')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY
 
 def extract_text_from_pdf(pdf_path):
