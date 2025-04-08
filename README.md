@@ -54,6 +54,7 @@ Hirecrest is a Flask-based web application designed to streamline job recruitmen
    MONGO_URI=your-mongodb-atlas-uri
    EMAIL_USER=your-email@gmail.com
    EMAIL_PASSWORD=your-email-app-password
+   GEMINI_API_KEY=gemini-api
 5. **Set Up Upload Folder**:
    The app automatically creates static/uploads/resumes for resume storage.
 
