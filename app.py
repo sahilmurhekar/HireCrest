@@ -105,17 +105,38 @@ def register():
     
     return render_template('register.html')
 
-@app.route('/home')
+@app.route('/home', methods=['GET'])
 @login_required
 def home():
     user_id = session.get('user_id')
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    
+    search_query = request.args.get('search', '').strip().lower()
+
     if user['role'] == 'student':
-        jobs = list(jobs_collection.find())
+        # Filter jobs based on search query
+        query = {}
+        if search_query:
+            query = {
+                '$or': [
+                    {'job_title': {'$regex': search_query, '$options': 'i'}},
+                    {'company': {'$regex': search_query, '$options': 'i'}},
+                    {'skills': {'$regex': search_query, '$options': 'i'}},
+                    {'location': {'$regex': search_query, '$options': 'i'}}
+                ]
+            }
+        jobs = list(jobs_collection.find(query))
         return render_template('jobs-client.html', jobs=jobs)
     elif user['role'] == 'recruiter':
-        jobs = list(jobs_collection.find({'recruiter_id': user_id}))
+        # Filter jobs posted by the recruiter
+        query = {'recruiter_id': user_id}
+        if search_query:
+            query['$or'] = [
+                {'job_title': {'$regex': search_query, '$options': 'i'}},
+                {'company': {'$regex': search_query, '$options': 'i'}},
+                {'skills': {'$regex': search_query, '$options': 'i'}},
+                {'location': {'$regex': search_query, '$options': 'i'}}
+            ]
+        jobs = list(jobs_collection.find(query))
         return render_template('jobs-admin.html', jobs=jobs)
     else:
         flash('Invalid role detected', 'danger')
@@ -239,27 +260,27 @@ def delete_job(job_id):
     
     return redirect(url_for('home'))
 
-@app.route('/list-applicants/<job_id>')
+@app.route('/list-applicants/<job_id>', methods=['GET'])
 @login_required
 def list_applicants(job_id):
     if session.get('role') != 'recruiter':
         flash('Only recruiters can view applicants', 'danger')
         return redirect(url_for('home'))
-    
+
     job = jobs_collection.find_one({
         '_id': ObjectId(job_id),
         'recruiter_id': session.get('user_id')
     })
-    
     if not job:
         flash('Job not found or you do not have permission to view it', 'danger')
         return redirect(url_for('home'))
-    
+
+    search_query = request.args.get('search', '').strip().lower()
     applicants = []
     for applicant in job.get('applied', []):
         user = users_collection.find_one({'_id': ObjectId(applicant['user_id'])})
         if user:
-            applicants.append({
+            applicant_data = {
                 'name': user['name'],
                 'username': user['username'],
                 'email': user['email'],
@@ -267,8 +288,15 @@ def list_applicants(job_id):
                 'compatibility': applicant['compatibility'],
                 'applied_date': applicant['applied_date'],
                 'user_id': applicant['user_id']
-            })
-    
+            }
+            # Filter applicants based on search query
+            if not search_query or (
+                search_query in user['name'].lower() or
+                search_query in user['email'].lower() or
+                search_query in user['username'].lower()
+            ):
+                applicants.append(applicant_data)
+
     return render_template('list-admin.html', job=job, applicants=applicants)
 
 @app.route('/download-resume/<filename>')
@@ -316,28 +344,36 @@ def reject_applicant(job_id, user_id):
     
     return redirect(url_for('list_applicants', job_id=job_id))
 
-@app.route('/my-applications')
+@app.route('/my-applications', methods=['GET'])
 @login_required
 def my_applications():
     if session.get('role') != 'student':
         flash('Only students can view their applications', 'danger')
         return redirect(url_for('home'))
-    
+
     user_id = session.get('user_id')
+    search_query = request.args.get('search', '').strip().lower()
     applied_jobs = list(jobs_collection.find({'applied.user_id': user_id}))
-    
     applications = []
+
     for job in applied_jobs:
         for applicant in job['applied']:
             if applicant['user_id'] == user_id:
-                applications.append({
+                application_data = {
                     'job_title': job['job_title'],
                     'company': job['company'],
                     'resume': applicant['resume'],
                     'applied_date': applicant['applied_date'],
                     'job_id': str(job['_id'])
-                })
-    
+                }
+                # Filter applications based on search query
+                if not search_query or (
+                    search_query in job['job_title'].lower() or
+                    search_query in job['company'].lower() or
+                    search_query in job['location'].lower()
+                ):
+                    applications.append(application_data)
+
     return render_template('list-client.html', applications=applications)
 
 @app.route('/withdraw-application/<job_id>', methods=['POST'])

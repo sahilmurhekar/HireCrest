@@ -47,8 +47,8 @@
         </div>
     </div>
     <div class="flex flex-col items-center justify-center md:items-start md:justify-start lg:flex-row">
-        <form class="pt-16 w-full flex flex-row justify-center lg:justify-start" action="" data-aos="fade-right" data-aos-duration="1000">
-            <input type="text" placeholder="Search for jobs..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" />
+        <form class="pt-16 w-full flex flex-row justify-center lg:justify-start" action="{{ url_for('my_applications') }}" method="GET" data-aos="fade-right" data-aos-duration="1000">
+            <input type="text" name="search" placeholder="Search your applications..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" value="{{ request.args.get('search', '') }}" />
             <button type="submit" class="btn btn-primary mx-4">Search</button>
         </form>
         <a href="{{ url_for('my_applications') }}" class="btn btn-primary my-8 mb-16 lg:my-16 px-16" data-aos="fade-left" data-aos-duration="1000">Applied Jobs</a>
@@ -56,24 +56,23 @@
     <div class="bg-base-100 sticky top-0 z-50" data-aos="fade-down">
         <h1 class="text-2xl font-bold pt-4">My Job Applications</h1>
     </div>
-    <div data-aos="fade-up" data-aos-delay="400">
+    <div>
         {% if applications %}
             {% for application in applications %}
-            <div class="cursor-pointer flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
-                <div class="flex flex-row gap-8">
-                    <div class="pt-2">
-                        <h1 class="text-xl font-bold">{{ application.job_title }}</h1>
-                        <h2>{{ application.company }}</h2>
-                        <p>Applied on: {{ application.applied_date.strftime('%Y-%m-%d') }}</p>
+                <div class="flex flex-col md:flex-row border-b border-base-300 justify-between mt-8 p-4">
+                    <div class="flex flex-row gap-8">
+                        <div class="pt-2">
+                            <h1 class="text-xl font-bold">{{ application.job_title }}</h1>
+                            <h2>{{ application.company }}</h2>
+                            <p>Applied on: {{ application.applied_date.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    </div>
+                    <div class="pt-4 flex flex-row justify-between gap-4 pr-2">
+                        <form action="{{ url_for('withdraw_application', job_id=application.job_id) }}" method="POST">
+                            <button type="submit" class="btn btn-warning">Withdraw</button>
+                        </form>
                     </div>
                 </div>
-                <div class="pt-4 flex flex-row justify-between gap-4 pr-2">
-                    <!-- Removed compatibility display -->
-                    <form action="{{ url_for('withdraw_application', job_id=application.job_id) }}" method="POST">
-                        <button type="submit" class="btn btn-warning">Withdraw</button>
-                    </form>
-                </div>
-            </div>
             {% endfor %}
         {% else %}
             <p>No applications found.</p>

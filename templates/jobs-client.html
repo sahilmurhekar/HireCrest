@@ -55,8 +55,8 @@
   
 <!----------------------------------------------- Searchbar ------------------------------------------------>
 <div class="flex flex-col items-center justify-center md:items-start md:justify-start lg:flex-row ">
-<form class="pt-16 w-full flex flex-row justify-center lg:justify-start" action="" data-aos="fade-right" data-aos-duration="1000">
-    <input type="text" placeholder="Search for jobs..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" />
+  <form class="pt-16 w-full flex flex-row justify-center lg:justify-start" action="{{ url_for('home') }}" method="GET" data-aos="fade-right" data-aos-duration="1000">
+    <input type="text" name="search" placeholder="Search for jobs..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" value="{{ request.args.get('search', '') }}" />
     <button type="submit" class="btn btn-primary mx-4">Search</button>
 </form>
 <a href="{{ url_for('my_applications') }}" class="btn btn-primary my-8 mb-16 lg:my-16 px-16" data-aos="fade-left" data-aos-duration="1000">Applied Jobs</a>
@@ -64,24 +64,25 @@
 
 <!----------------------------------------------- Job Listings ----------------------------------------------->
 
-<div class="mt-16 flex flex-row flex-wrap gap-12 justify-center">
-  {% for job in jobs %}
-  <div class="card bg-base-200 w-84 shadow-sm mb-12" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
-      <div class="card-body">
-          <h1 class="text-2xl font-bold">{{ job.job_title }}</h1>
-          <h2 class="text-lg">{{ job.company }}</h2>
-          <p>{{ job.posted_date.strftime('%Y-%m-%d') }}</p>
-          <ul class="font-light">
-              <li>Salary: {{ job.salary }}</li>
-              <li>Experience: {{ job.experience }} yrs</li>
-              <li>Type: {{ job.job_type }}</li>
-              <li>Location: {{ job.location }}</li>
-          </ul>
-          <div class="card-actions justify-start mt-4">
-              <button class="btn btn-primary" onclick="my_model_{{ loop.index }}.showModal()">Apply</button>
+<div>
+  {% if jobs %}
+      {% for job in jobs %}
+          <div class="card bg-base-100 shadow-xl my-4">
+              <div class="card-body">
+                  <h2 class="card-title">{{ job.job_title }}</h2>
+                  <p>{{ job.company }}</p>
+                  <p>Posted on: {{ job.posted_date.strftime('%Y-%m-%d') }}</p>
+                  <ul class="font-light">
+                      <li>Salary: {{ job.salary }}</li>
+                      <li>Experience: {{ job.experience }} yrs</li>
+                      <li>Type: {{ job.job_type }}</li>
+                      <li>Location: {{ job.location }}</li>
+                  </ul>
+                  <div class="card-actions justify-end">
+                      <button class="btn btn-primary" onclick="my_model_{{ loop.index }}.showModal()">Apply</button>
+                  </div>
+              </div>
           </div>
-      </div>
-  </div>
   <!-- Modal for this job -->
   <dialog id="my_model_{{ loop.index }}" class="modal">
       <div class="modal-box" style="max-width: 740px!important;" data-aos="zoom-in" data-aos-duration="500">
@@ -116,6 +117,10 @@
       </div>
   </dialog>
   {% endfor %}
+    {% else %}
+        <p>No jobs found.</p>
+    {% endif %}
+</div>
 </div>
   <footer class="footer font-light text-sm pt-16" data-aos="fade-up" data-aos-duration="800">Copyright © 2025 HireCrest</footer>
 
