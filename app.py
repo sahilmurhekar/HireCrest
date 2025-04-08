@@ -8,12 +8,25 @@ from bson.objectid import ObjectId
 from flask import send_from_directory
 from datetime import datetime
 from compatibility import extract_text_from_pdf, get_compatibility_score
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = 'static/uploads/resumes'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx'}
+
+
+# Mail configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Or your preferred SMTP server
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER', 'sahil.murhekar2004@gmail.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD', 'vavhpcmlujckahvq')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER', 'sahil.murhekar2004@gmail.com')
+
+mail = Mail(app)
+
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -339,6 +352,13 @@ def reject_applicant(job_id, user_id):
             {'_id': ObjectId(job_id)},
             {'$pull': {'applied': {'user_id': user_id}}}
         )
+        
+        # Also remove any scheduled interviews for this candidate and job
+        interviews_collection.delete_many({
+            'job_id': job_id,
+            'user_id': user_id
+        })
+        
         flash('Applicant rejected successfully!', 'success')
     except Exception as e:
         flash(f'Error rejecting applicant: {str(e)}', 'danger')
@@ -408,6 +428,13 @@ def withdraw_application(job_id):
             {'_id': ObjectId(job_id)},
             {'$pull': {'applied': {'user_id': user_id}}}
         )
+        
+        # Also remove any scheduled interviews for this candidate and job
+        interviews_collection.delete_many({
+            'job_id': job_id,
+            'user_id': user_id
+        })
+        
         flash('Application withdrawn successfully!', 'success')
     except Exception as e:
         flash(f'Error withdrawing application: {str(e)}', 'danger')
@@ -434,6 +461,16 @@ def schedule_interview(job_id, user_id):
         flash('User not found', 'danger')
         return redirect(url_for('list_applicants', job_id=job_id))
 
+    # Check if an interview already exists for this job and user
+    existing_interview = interviews_collection.find_one({
+        'job_id': job_id,
+        'user_id': user_id
+    })
+    
+    if existing_interview:
+        flash(f'An interview is already scheduled for {user["name"]} for the position of {job["job_title"]} at {job["company"]} on {existing_interview["scheduled_date"]} at {existing_interview["scheduled_time"]}', 'warning')
+        return redirect(url_for('list_applicants', job_id=job_id))
+
     try:
         scheduled_date = request.form.get('date')
         scheduled_time = request.form.get('time')
@@ -444,6 +481,7 @@ def schedule_interview(job_id, user_id):
             'email': user['email'],
             'job_id': job_id,
             'job_name': job['job_title'],
+            'company': job['company'],
             'scheduled_date': scheduled_date,
             'scheduled_time': scheduled_time,
             'recruiter_id': session.get('user_id'),
@@ -451,12 +489,29 @@ def schedule_interview(job_id, user_id):
         }
 
         interviews_collection.insert_one(interview_data)
-        flash('Interview scheduled successfully!', 'success')
+        
+        # Send email notification to the applicant
+        msg = Message(
+            subject=f"Interview Scheduled - {job['job_title']} at {job['company']}",
+            recipients=[user['email']]
+        )
+        
+        msg.html = render_template(
+            'interview-notification.html',
+            user_name=user['name'],
+            job_title=job['job_title'],
+            company=job['company'],
+            date=scheduled_date,
+            time=scheduled_time
+        )
+        
+        mail.send(msg)
+        
+        flash('Interview scheduled successfully and notification sent!', 'success')
     except Exception as e:
         flash(f'Error scheduling interview: {str(e)}', 'danger')
 
     return redirect(url_for('list_applicants', job_id=job_id))
-
 
 @app.route('/scheduled-interviews', methods=['GET'])
 @login_required
@@ -511,6 +566,58 @@ def reject_interview(interview_id):
         flash('Interview rejected successfully!', 'success')
     except Exception as e:
         flash(f'Error rejecting interview: {str(e)}', 'danger')
+    
+    return redirect(url_for('scheduled_interviews'))
+
+@app.route('/select-applicant/<interview_id>', methods=['POST'])
+@login_required
+def select_applicant(interview_id):
+    if session.get('role') != 'recruiter':
+        flash('Only recruiters can select applicants', 'danger')
+        return redirect(url_for('home'))
+    
+    interview = interviews_collection.find_one({
+        '_id': ObjectId(interview_id),
+        'recruiter_id': session.get('user_id')
+    })
+    
+    if not interview:
+        flash('Interview not found or you do not have permission to modify it', 'danger')
+        return redirect(url_for('scheduled_interviews'))
+    
+    try:
+        # Send email notification to the selected applicant
+        msg = Message(
+            subject=f"Congratulations! You've Been Selected - {interview['job_name']} at {interview['company']}",
+            recipients=[interview['email']]
+        )
+        
+        msg.html = render_template(
+            'selection-notification.html',
+            user_name=interview['user_name'],
+            job_title=interview['job_name'],
+            company=interview['company'],
+            scheduled_date=interview['scheduled_date'],
+            scheduled_time=interview['scheduled_time']
+        )
+        
+        mail.send(msg)
+        
+        # Remove the interview from interviews_collection
+        interviews_collection.delete_one({'_id': ObjectId(interview_id)})
+        
+        # Remove the applicant from the job's applied array
+        job_id = interview['job_id']
+        user_id = interview['user_id']
+        
+        jobs_collection.update_one(
+            {'_id': ObjectId(job_id)},
+            {'$pull': {'applied': {'user_id': user_id}}}
+        )
+        
+        flash('Applicant selected successfully, notification sent, and application removed!', 'success')
+    except Exception as e:
+        flash(f'Error selecting applicant: {str(e)}', 'danger')
     
     return redirect(url_for('scheduled_interviews'))
 

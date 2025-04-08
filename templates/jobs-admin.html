@@ -59,7 +59,7 @@
     <input type="text" name="search" placeholder="Search for jobs..." class="rounded-box bg-base-200 border-base-300 px-4 w-full" value="{{ request.args.get('search', '') }}" />
     <button type="submit" class="btn btn-primary mx-4">Search</button>
 </form>
-<button class="btn btn-primary my-8 mb-16 lg:my-16 px-16" onclick="my_modal_5.showModal()" data-aos="fade-left" data-aos-duration="1000">Post New Job +</button>
+<button class="btn btn-primary my-8 mb-8 lg:my-16 px-16" onclick="my_modal_5.showModal()" data-aos="fade-left" data-aos-duration="1000">Post New Job +</button>
 <dialog id="my_modal_5" class="modal modal-medium">
   <div class="modal-box" data-aos="zoom-in" data-aos-duration="500">
     <h3 class="text-lg font-bold my-6">Enter job details</h3>
@@ -83,6 +83,7 @@
   </form>
     </div>
 </dialog>
+<button class="btn btn-primary mb-16 lg:my-16 lg:ml-4" onclick="window.location='{{ url_for('scheduled_interviews') }}'" data-aos="fade-left" data-aos-duration="1000">View Scheduled Interviews</button>
 </div>
 
 <!----------------------------------------------- Job Listings ----------------------------------------------->

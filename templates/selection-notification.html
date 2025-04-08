@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 20px;
+        }
+        .congrats {
+            font-size: 1.2em;
+            color: #2ecc71;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Congratulations!</h2>
+    </div>
+    
+    <div class="content">
+        <p>Dear {{ user_name }},</p>
+        
+        <p class="congrats">We have great news!</p>
+        
+        <p>We are thrilled to inform you that you have been selected for the position of <strong>{{ job_title }}</strong> at <strong>{{ company }}</strong> following your recent interview!</p>
+        
+        <div class="details">
+            <p><strong>Your Interview Was On:</strong></p>
+            <p><strong>Date:</strong> {{ scheduled_date }}</p>
+            <p><strong>Time:</strong> {{ scheduled_time }}</p>
+        </div>
+        
+        <p>Please expect to hear from our HR team soon regarding the next steps in your onboarding process. If you have any immediate questions, feel free to reach out to us.</p>
+        
+        <p>Welcome aboard! We’re excited to have you join the {{ company }} team!</p>
+        
+        <p>Best regards,<br>
+        The {{ company }} Recruitment Team</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message from the Hirecrest platform. Please do not reply to this email.</p>
+    </div>
+</body>
+</html>

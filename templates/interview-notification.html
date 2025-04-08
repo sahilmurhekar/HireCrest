@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4a69bd;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Interview Confirmation</h2>
+    </div>
+    
+    <div class="content">
+        <p>Dear {{ user_name }},</p>
+        
+        <p>Congratulations! We're pleased to inform you that your interview for the position of <strong>{{ job_title }}</strong> at <strong>{{ company }}</strong> has been scheduled.</p>
+        
+        <div class="details">
+            <p><strong>Date:</strong> {{ date }}</p>
+            <p><strong>Time:</strong> {{ time }}</p>
+        </div>
+        
+        <p>Please be prepared and ensure you join the interview on time. If you need to reschedule or have any questions, please contact us as soon as possible.</p>
+        
+        <p>We look forward to speaking with you!</p>
+        
+        <p>Best regards,<br>
+        The {{ company }} Recruitment Team</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message from the Hirecrest platform. Please do not reply to this email.</p>
+    </div>
+</body>
+</html>
