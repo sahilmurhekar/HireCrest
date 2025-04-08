@@ -7,6 +7,7 @@ from functools import wraps
 from bson.objectid import ObjectId
 from flask import send_from_directory
 from datetime import datetime
+from compatibility import extract_text_from_pdf, get_compatibility_score
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -193,7 +194,10 @@ def apply_job(job_id):
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         resume_file.save(file_path)
         
-        compatibility = 75  # Placeholder; implement actual logic if needed
+        # Extract resume text and calculate compatibility score
+        resume_text = extract_text_from_pdf(file_path)
+        
+        compatibility, explaination = get_compatibility_score(resume_text, job)
         
         jobs_collection.update_one(
             {'_id': ObjectId(job_id)},
@@ -204,7 +208,7 @@ def apply_job(job_id):
                 'applied_date': datetime.now()
             }}}
         )
-        
+        print(explaination)
         flash('Application submitted successfully!', 'success')
     except Exception as e:
         flash(f'Error applying for job: {str(e)}', 'danger')
@@ -262,7 +266,7 @@ def list_applicants(job_id):
                 'resume': applicant['resume'],
                 'compatibility': applicant['compatibility'],
                 'applied_date': applicant['applied_date'],
-                'user_id': applicant['user_id']  # Add this line
+                'user_id': applicant['user_id']
             })
     
     return render_template('list-admin.html', job=job, applicants=applicants)
