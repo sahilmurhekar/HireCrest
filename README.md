@@ -38,7 +38,7 @@ Hirecrest is a Flask-based web application designed to streamline job recruitmen
 
 1. **Clone the Repository**:
    ```
-   git clone https://github.com/yourusername/hirecrest.git
+   git clone https://github.com/sahilmurhekar/HireCrest
    cd hirecrest
 2. **Set Up a Virtual Environment:**
    ```
