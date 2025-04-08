@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 from functools import wraps
 from bson.objectid import ObjectId
+from flask import send_from_directory
 from datetime import datetime
 
 app = Flask(__name__)
@@ -64,6 +65,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        name = request.form['name']
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -84,6 +86,7 @@ def register():
             return render_template('register.html')
         
         new_user = {
+            'name':name,
             'username': username,
             'email': email,
             'password_hash': generate_password_hash(password),
@@ -253,6 +256,7 @@ def list_applicants(job_id):
         user = users_collection.find_one({'_id': ObjectId(applicant['user_id'])})
         if user:
             applicants.append({
+                'name': user['name'],
                 'username': user['username'],
                 'email': user['email'],
                 'resume': applicant['resume'],
@@ -262,6 +266,23 @@ def list_applicants(job_id):
             })
     
     return render_template('list-admin.html', job=job, applicants=applicants)
+
+@app.route('/download-resume/<filename>')
+@login_required
+def download_resume(filename):
+    if session.get('role') != 'recruiter':
+        flash('Only recruiters can download resumes', 'danger')
+        return redirect(url_for('home'))
+    
+    try:
+        return send_from_directory(
+            app.config['UPLOAD_FOLDER'],
+            filename,
+            as_attachment=True
+        )
+    except Exception as e:
+        flash(f'Error downloading resume: {str(e)}', 'danger')
+        return redirect(url_for('home'))
 
 @app.route('/reject-applicant/<job_id>/<user_id>', methods=['POST'])
 @login_required
