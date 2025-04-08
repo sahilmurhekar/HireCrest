@@ -1,38 +1,39 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 from functools import wraps
 from bson.objectid import ObjectId
-from flask import send_from_directory
 from datetime import datetime
 from compatibility import extract_text_from_pdf, get_compatibility_score
 from flask_mail import Mail, Message
+from dotenv import load_dotenv  # Import python-dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # Load SECRET_KEY from .env
 app.config['UPLOAD_FOLDER'] = 'static/uploads/resumes'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx'}
-
 
 # Mail configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Or your preferred SMTP server
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER', 'sahil.murhekar2004@gmail.com')
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD', 'vavhpcmlujckahvq')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER', 'sahil.murhekar2004@gmail.com')
+app.config['MAIL_USERNAME'] = os.getenv('EMAIL_USER')  # Load from .env
+app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASSWORD')  # Load from .env
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('EMAIL_USER')
 
 mail = Mail(app)
-
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # MongoDB Atlas connection
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb+srv://sahilmurhekar2004:sahilmurhekar@firstinstance.lend0.mongodb.net/?retryWrites=true&w=majority&appName=FirstInstance')
+MONGO_URI = os.getenv('MONGO_URI')  # Load MONGO_URI from .env
 client = MongoClient(MONGO_URI)
 db = client['Hirecrest']
 users_collection = db['Users']
@@ -101,7 +102,7 @@ def register():
             return render_template('register.html')
         
         new_user = {
-            'name':name,
+            'name': name,
             'username': username,
             'email': email,
             'password_hash': generate_password_hash(password),
@@ -231,8 +232,7 @@ def apply_job(job_id):
         
         # Extract resume text and calculate compatibility score
         resume_text = extract_text_from_pdf(file_path)
-        
-        compatibility, explaination = get_compatibility_score(resume_text, job)
+        compatibility, explanation = get_compatibility_score(resume_text, job)
         
         jobs_collection.update_one(
             {'_id': ObjectId(job_id)},
@@ -243,7 +243,7 @@ def apply_job(job_id):
                 'applied_date': datetime.now()
             }}}
         )
-        print(explaination)
+        print(explanation)  # Fixed typo 'explaination' to 'explanation'
         flash('Application submitted successfully!', 'success')
     except Exception as e:
         flash(f'Error applying for job: {str(e)}', 'danger')
