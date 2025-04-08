@@ -257,10 +257,39 @@ def list_applicants(job_id):
                 'email': user['email'],
                 'resume': applicant['resume'],
                 'compatibility': applicant['compatibility'],
-                'applied_date': applicant['applied_date']
+                'applied_date': applicant['applied_date'],
+                'user_id': applicant['user_id']  # Add this line
             })
     
     return render_template('list-admin.html', job=job, applicants=applicants)
+
+@app.route('/reject-applicant/<job_id>/<user_id>', methods=['POST'])
+@login_required
+def reject_applicant(job_id, user_id):
+    if session.get('role') != 'recruiter':
+        flash('Only recruiters can reject applicants', 'danger')
+        return redirect(url_for('home'))
+    
+    job = jobs_collection.find_one({
+        '_id': ObjectId(job_id),
+        'recruiter_id': session.get('user_id')
+    })
+    
+    if not job:
+        flash('Job not found or you do not have permission to modify it', 'danger')
+        return redirect(url_for('home'))
+    
+    try:
+        # Remove the student's application from the applied array
+        jobs_collection.update_one(
+            {'_id': ObjectId(job_id)},
+            {'$pull': {'applied': {'user_id': user_id}}}
+        )
+        flash('Applicant rejected successfully!', 'success')
+    except Exception as e:
+        flash(f'Error rejecting applicant: {str(e)}', 'danger')
+    
+    return redirect(url_for('list_applicants', job_id=job_id))
 
 @app.route('/my-applications')
 @login_required

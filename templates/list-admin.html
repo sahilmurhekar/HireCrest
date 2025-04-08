@@ -100,7 +100,9 @@
             <div class="pt-4 flex flex-row justify-between gap-4 pr-2">
                 <div class="flex flex-row gap-4">
                     <button class="btn btn-success">Confirm</button>
-                    <button class="btn btn-warning">Reject</button>
+                    <form action="{{ url_for('reject_applicant', job_id=job._id, user_id=applicant.user_id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-warning">Reject</button>
+                    </form>
                 </div>
                 <h1 class="text-2xl font-bold py-1">{{ applicant.compatibility }}%</h1>
             </div>
