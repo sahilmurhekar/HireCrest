@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
-from pymongo import MongoClient
+from pymongo import MongoClient # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
 from functools import wraps
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId # type: ignore
 from datetime import datetime
 from compatibility import extract_text_from_pdf, get_compatibility_score
 from flask_mail import Mail, Message
