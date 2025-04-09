@@ -92,6 +92,12 @@ hirecrest/
 └── README.md           # This file
 ```
 
+## Deployment
+Used Railway for the deployment of the project. Changes made:
+add a Procfile
+  ```
+  web: gunicorn app:app
+  ```
 ## Contributing
 
 1. Fork the repository.
