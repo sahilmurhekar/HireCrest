@@ -2,6 +2,9 @@
 
 Hirecrest is a Flask-based web application designed to streamline job recruitment processes. It allows recruiters to post job listings, students to apply with resumes, and facilitates interview scheduling with email notifications. The app features role-based access (recruiters and students), resume compatibility scoring, and MongoDB Atlas for data persistence.
 
+### Link to the website:
+[https://hirecrest.up.railway.app](https://hirecrest.up.railway.app/)
+
 ## Features
 
 - **User Authentication**: Register and log in as a student or recruiter with secure password hashing.
