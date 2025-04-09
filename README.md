@@ -2,6 +2,9 @@
 
 Hirecrest is a Flask-based web application designed to streamline job recruitment processes. It allows recruiters to post job listings, students to apply with resumes, and facilitates interview scheduling with email notifications. The app features role-based access (recruiters and students), resume compatibility scoring, and MongoDB Atlas for data persistence.
 
+### Link to the website:
+[https://hirecrest.up.railway.app](https://hirecrest.up.railway.app/)
+
 ## Features
 
 - **User Authentication**: Register and log in as a student or recruiter with secure password hashing.
@@ -92,6 +95,12 @@ hirecrest/
 └── README.md           # This file
 ```
 
+## Deployment
+Used Railway for the deployment of the project. Changes made:
+add a Procfile
+  ```
+  web: gunicorn app:app
+  ```
 ## Contributing
 
 1. Fork the repository.
@@ -99,3 +108,6 @@ hirecrest/
 3. Commit changes (git commit -m "Add feature").
 4. Push to the branch (git push origin feature-name).
 5. Open a Pull Request.
+
+## Link to the demo video:
+[https://drive.google.com/file/d/1D2gfyVzGff4vgfg4eJU4gv-DvP82wuIB/view?usp=sharing](https://drive.google.com/file/d/1D2gfyVzGff4vgfg4eJU4gv-DvP82wuIB/view?usp=sharing)
