@@ -64,7 +64,7 @@
 
     {% if interviews %}
         {% for interview in interviews %}
-            <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col md:flex-row justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
+            <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col border-b border-base-300 md:flex-row justify-between mt-8 p-4 hover:bg-base-200 transition duration-300 ease-in-out">
                 <div class="flex flex-row gap-8">
                     <div class="pt-2">
                         <h1 class="text-xl font-bold">{{ interview.user_name }}</h1>
@@ -75,17 +75,16 @@
                 <div class="pt-4 flex flex-col md:flex-row items-center justify-between gap-8 pr-2">
                     <p class="font-light text-sm">{{ interview.scheduled_date }} at {{ interview.scheduled_time }}</p>
                 </div>
+                <div class="mt-4">
+                    <form action="{{ url_for('select_applicant', interview_id=interview._id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-success mr-4 m-1">Select</button>
+                    </form>
+                    <form action="{{ url_for('reject_interview', interview_id=interview._id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-warning mr-4 m-1">Reject</button>
+                    </form>
                 </div>
-                <div class="border-b border-base-300">
-                    <div>
-                        <form action="{{ url_for('select_applicant', interview_id=interview._id) }}" method="POST" style="display: inline;">
-                            <button type="submit" class="btn btn-success m-4">Select</button>
-                        </form>
-                        <form action="{{ url_for('reject_interview', interview_id=interview._id) }}" method="POST" style="display: inline;">
-                            <button type="submit" class="btn btn-warning">Reject</button>
-                        </form>
-                    </div>
                 </div>
+                
         {% endfor %}
     {% else %}
         <p>No interviews scheduled yet.</p>

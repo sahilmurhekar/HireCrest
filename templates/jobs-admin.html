@@ -102,7 +102,7 @@
                       <li>Type: {{ job.job_type }}</li>
                       <li>Location: {{ job.location }}</li>
                   </ul>
-                  <div class="card-actions justify-end">
+                  <div class="card-actions justify-start md:justify-end">
                       <a href="{{ url_for('list_applicants', job_id=job._id) }}" class="btn btn-primary">View Applicants</a>
                       <a href="{{ url_for('delete_job', job_id=job._id) }}" class="btn btn-error">Delete</a>
                   </div>

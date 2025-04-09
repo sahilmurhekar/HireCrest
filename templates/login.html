@@ -79,8 +79,9 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
-    <h2 style="color: transparent; -webkit-text-stroke: 1px white; filter: opacity(0.2);" class="pt-22 px-8 absolute stroke stroke-2 text-7xl font-bold md:text-9xl md:pt-16 md:px-24 animate-pulse">LOGIN</h2>
-    <h1 class="p-24 font-bold text-6xl text-center lg:text-left animate-fadeIn" style="animation-delay: 0.2s; opacity: 0;">LOGIN</h1> 
+<div class="flex items-center justify-center md:items-start md:justify-start">
+    <h1 class="p-12 font-bold text-6xl animate-fadeIn" style="animation-delay: 0.2s; opacity: 0;">LOGIN</h1> 
+</div>
     <form class="px-0 lg:px-24" action="{{url_for('login')}}" method="POST">
         <div class="justify-center items-center flex flex-col lg:items-start">
         <input type="text" name="username" placeholder="Username" class="input border-2 w-full mb-8 md:w-150 animate-slideIn bg-transparent" style="animation-delay: 0.4s; opacity: 0;" required>
