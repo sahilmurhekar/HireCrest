@@ -9,7 +9,7 @@ from datetime import datetime
 from compatibility import extract_text_from_pdf, get_compatibility_score
 from flask_mail import Mail, Message
 from dotenv import load_dotenv  # Import python-dotenv
-import google.generativeai as genai
+import google.generativeai as genai # type: ignore
 
 # Load environment variables
 load_dotenv()
@@ -282,7 +282,7 @@ How do I get started?
 How do I register?
 "Go to the Register page, fill in your details (name, username, email, password, gender, role), and submit the form."
 What if I forget my password?
-"Currently, password recovery isn’t implemented. Contact support at [insert support email] for assistance."
+"Currently, password recovery isn’t implemented. Contact support at sahil.murhekar2004@gmail.com for assistance."
 How do I log out?
 "Click the logout option in your dashboard to end your session."
 3. For Students
@@ -319,7 +319,7 @@ Why can’t I upload my resume?
 Why don’t I see my posted job?
 "Refresh the page or check if there was an error during posting. Contact support if the issue persists."
 I’m seeing an error message. What do I do?
-"Note the error message and contact support at [sahil.murhekar2004@gmail.com.] with details."
+"Note the error message and contact support at sahil.murhekar2004@gmail.com with details."
 Why didn’t I receive an interview email?
 "Check your spam/junk folder. If it’s not there, the recruiter may not have scheduled it yet."
 6. FAQs
@@ -335,7 +335,7 @@ How do I contact support?
 "Thanks!"
 "You’re welcome! Anything else I can assist you with?"
 Fallback Response
-"I’m not sure how to answer that. Try asking something specific about jobs, applications, or interviews, or contact support at [sahil.murhekar2004@gmail.com.]"
+"I’m not sure how to answer that. Try asking something specific about jobs, applications, or interviews, or contact support at sahil.murhekar2004@gmail.com."
 
         Now, respond to this: {message}
         """
