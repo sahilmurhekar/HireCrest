@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/static/assets/logo_light.png" type="image/x-icon">
     <title>HireCrestAI - Applicants</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Righteous&display=swap" rel="stylesheet">
@@ -15,7 +16,61 @@
     <link href="/static/themes.css" rel="stylesheet" type="text/css" />
     <style>* {
         caret-color: transparent; /* Hides the blinking text cursor */
-      }</style>
+      }
+      .chatbot-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        cursor: pointer;
+        z-index: 1000;
+    }
+    .chatbot-popup {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 320px;
+        height: 400px;
+        background: #111;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+    }
+    .chatbot-header {
+        background: #111;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    .chatbot-messages {
+        flex-grow: 1;
+        padding: 10px;
+        font-size: smaller;
+        overflow-y: auto;
+        font-weight: 400;
+        background: #272727;
+    }
+    .chatbot-messages div {
+        margin-bottom: 10px;
+    }
+    .chatbot-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #272727;
+    }
+    .chatbot-input input {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+    .hidden {
+        display: none;
+    }
+      </style>
 </head>
 <body style="font-family:Josefin Sans!important;" class="px-[10%] py-2">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -82,6 +137,7 @@
     </div>
 
 
+
     <div class="bg-base-100 sticky top-0 z-50" data-aos="fade-down">
         <h1 class="text-2xl font-bold pt-4">Applicants for {{ job.job_title }} at {{ job.company }}</h1>
     </div>
@@ -125,9 +181,81 @@
             <p>No applicants found.</p>
         {% endif %}
     </div>
+  <!---------------------CHATBOT---------------------------------->
+  <div id="chatbot-icon" class="chatbot-icon shadow-xl hover:opacity-[0.8] transition duration-300 ease-in-out">
+    <img src="/static/assets/chatbot-icon.png" alt="Chatbot" class="w-12 h-12">
+</div>
+
+<!-- Chatbot Popup -->
+<div id="chatbot-popup" class="chatbot-popup hidden">
+    <div class="chatbot-header">
+        <h3 class="text-lg font-bold">Hirecrest Assistant</h3>
+        <button id="close-chatbot" class="text-white">X</button>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbot-input" placeholder="Ask me anything..." class="input input-bordered w-full">
+        <button id="send-message" class="btn btn-primary">Send</button>
+    </div>
+</div>
+
     <p class="font-light text-sm pt-16" data-aos="fade-up" data-aos-duration="800">Copyright © 2025 HireCrest</p>
     <script>
         AOS.init();
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotIcon = document.getElementById('chatbot-icon');
+            const chatbotPopup = document.getElementById('chatbot-popup');
+            const closeChatbot = document.getElementById('close-chatbot');
+            const sendMessage = document.getElementById('send-message');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            
+            let hasShownWelcome = false;
+        
+            chatbotIcon.addEventListener('click', function() {
+                chatbotPopup.classList.toggle('hidden');
+                if (!chatbotPopup.classList.contains('hidden') && !hasShownWelcome) {
+                    appendMessage('Retrox', 'Hello I am Retrox, your chatbot assistant! How can I assist you today?');
+                    hasShownWelcome = true;
+                }
+            });
+        
+            closeChatbot.addEventListener('click', function() {
+                chatbotPopup.classList.add('hidden');
+            });
+        
+            sendMessage.addEventListener('click', sendChat);
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendChat();
+            });
+        
+            function sendChat() {
+                const message = chatbotInput.value.trim();
+                if (message) {
+                    appendMessage('You', message);
+                    fetch('/chatbot', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message })
+                    })
+                    .then(response => response.json())
+                    .then(data => appendMessage('Retrox', data.response))
+                    .catch(error => appendMessage('Retrox', 'Sorry, something went wrong.'));
+                    chatbotInput.value = '';
+                }
+            }
+        
+            function appendMessage(sender, text) {
+                const messageDiv = document.createElement('div');
+                // Convert Markdown to HTML using marked
+                const formattedText = marked.parse(text);
+                messageDiv.innerHTML = `<strong style="font-size:18px">${sender}:</strong> ${formattedText}`;
+                chatbotMessages.appendChild(messageDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+        });
+        </script>
 </body>
 </html>

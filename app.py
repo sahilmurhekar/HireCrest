@@ -9,9 +9,16 @@ from datetime import datetime
 from compatibility import extract_text_from_pdf, get_compatibility_score
 from flask_mail import Mail, Message
 from dotenv import load_dotenv  # Import python-dotenv
+import google.generativeai as genai
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
+# Configure Gemini API
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-2.0-flash')  # Adjust model name as per API docs
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # Load SECRET_KEY from .env
@@ -250,6 +257,97 @@ def apply_job(job_id):
     
     return redirect(url_for('home'))
 
+@app.route('/chatbot', methods=['POST'])
+def chatbot():
+    try:
+        data = request.get_json()
+        message = data.get('message', '')
+
+        if not message:
+            return jsonify({'response': 'Please ask something!'}), 400
+
+        # Define chatbot context (knowledge base)
+        prompt = f"""
+        You are Hirecrest Assistant named Retrox, a helpful AI for the Hirecrest platform.
+        Answer questions about Hirecrest based on this knowledge:
+        
+        1. General Information
+What is Hirecrest?
+"Hirecrest is a platform connecting students (job seekers) with recruiters. Students can apply for jobs, upload resumes, and schedule interviews, while recruiters can post jobs, review applications, and manage interviews."
+Who can use Hirecrest?
+"Hirecrest is designed for students looking for job opportunities and recruiters looking to hire talent."
+How do I get started?
+"Register an account by selecting your role (student or recruiter), then log in to access the dashboard tailored to your needs."
+2. Account Management
+How do I register?
+"Go to the Register page, fill in your details (name, username, email, password, gender, role), and submit the form."
+What if I forget my password?
+"Currently, password recovery isn’t implemented. Contact support at [insert support email] for assistance."
+How do I log out?
+"Click the logout option in your dashboard to end your session."
+3. For Students
+How do I search for jobs?
+"From the home page, use the search bar to filter jobs by title, company, skills, or location."
+How do I apply for a job?
+"Find a job on the home page, click 'Apply,' upload your resume (PDF, DOC, or DOCX), and submit your application."
+What file types are supported for resumes?
+"We support PDF, DOC, and DOCX files, with a maximum size of 16MB."
+How do I check my application status?
+"Go to 'My Applications' to see the jobs you’ve applied for and their details."
+Can I withdraw my application?
+"Yes, go to 'My Applications,' find the job, and click 'Withdraw Application.'"
+What does the compatibility score mean?
+"The compatibility score shows how well your resume matches the job requirements, calculated based on skills, experience, and keywords."
+4. For Recruiters
+How do I post a job?
+"From the home page, click 'Post Job,' fill in the details (title, company, salary, etc.), and submit."
+How do I view applicants?
+"Go to your posted job and click 'List Applicants' to see who applied."
+Can I download resumes?
+"Yes, from the 'List Applicants' page, click 'Download Resume' next to an applicant."
+How do I schedule an interview?
+"In 'List Applicants,' select an applicant, choose a date and time, and submit to schedule an interview."
+How do I reject an applicant?
+"From 'List Applicants,' click 'Reject' next to the applicant’s name."
+How do I manage scheduled interviews?
+"Go to 'Scheduled Interviews' to view, reject, or select candidates."
+What happens when I select an applicant?
+"The applicant is notified via email, their application is removed from the job, and the interview is cleared from your list."
+5. Troubleshooting
+Why can’t I upload my resume?
+"Ensure your file is a PDF, DOC, or DOCX and under 16MB. Check your internet connection too."
+Why don’t I see my posted job?
+"Refresh the page or check if there was an error during posting. Contact support if the issue persists."
+I’m seeing an error message. What do I do?
+"Note the error message and contact support at [sahil.murhekar2004@gmail.com.] with details."
+Why didn’t I receive an interview email?
+"Check your spam/junk folder. If it’s not there, the recruiter may not have scheduled it yet."
+6. FAQs
+Is Hirecrest free to use?
+"Yes, Hirecrest is currently free for both students and recruiters."
+Can I edit a job posting?
+"Editing isn’t supported yet, but you can delete and repost the job."
+How do I contact support?
+"Email us at [sahil.murhekar2004@gmail.com.] for assistance."
+7. Chatbot-Specific Responses
+"I don’t understand."
+"Could you please rephrase your question? I’m here to help!"
+"Thanks!"
+"You’re welcome! Anything else I can assist you with?"
+Fallback Response
+"I’m not sure how to answer that. Try asking something specific about jobs, applications, or interviews, or contact support at [sahil.murhekar2004@gmail.com.]"
+
+        Now, respond to this: {message}
+        """
+        
+        # Call Gemini API
+        response = model.generate_content(prompt)
+        reply = response.text.strip()
+
+        return jsonify({'response': reply})
+    except Exception as e:
+        return jsonify({'response': f'Sorry, something went wrong: {str(e)}'}), 500
+    
 @app.route('/delete-job/<job_id>')
 @login_required
 def delete_job(job_id):
