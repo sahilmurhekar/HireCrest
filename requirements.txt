@@ -6,4 +6,4 @@ Flask-Mail==0.9.1
 PyMuPDF
 requests
 gunicorn
-google
+google.generativeai
