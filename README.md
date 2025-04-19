@@ -110,4 +110,4 @@ add a Procfile
 5. Open a Pull Request.
 
 ## Link to the demo video:
-[https://drive.google.com/file/d/1D2gfyVzGff4vgfg4eJU4gv-DvP82wuIB/view?usp=sharing](https://drive.google.com/file/d/1D2gfyVzGff4vgfg4eJU4gv-DvP82wuIB/view?usp=sharing)
+[https://www.youtube.com/watch?v=ZynItmDiR8o](https://www.youtube.com/watch?v=ZynItmDiR8o)
