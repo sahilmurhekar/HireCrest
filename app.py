@@ -42,7 +42,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # MongoDB Atlas connection
 MONGO_URI = os.getenv('MONGO_URI')  # Load MONGO_URI from .env
 client = MongoClient(MONGO_URI)
-db = client['Hirecrest']
+db = client['HIRECREST_DB']
 users_collection = db['Users']
 jobs_collection = db['Jobs']
 interviews_collection = db['Interviews']  # New collection for interviews
