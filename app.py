@@ -728,6 +728,6 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    port = int(os.getenv("PORT", 5000))  # Railway provides PORT, fallback to 5000 locally
+    port=os.getenv("PORT", default=5000)  # Railway provides PORT, fallback to 5000 locally
     host = "0.0.0.0"  # Bind to all interfaces for Railway
     app.run(host=host, port=port, debug=False)  # Disable debug for production
